@@ -1,0 +1,610 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "microServices/service1/api/gunk/all.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrgProfileService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/orgprofile": {
+      "get": {
+        "summary": "List org profiles.",
+        "description": "List all created org profiles.",
+        "operationId": "OrgProfileService_ListProfiles",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v1/orgprofile/{id}": {
+      "get": {
+        "summary": "Get org profile.",
+        "description": "Get created org profile from org ID.",
+        "operationId": "OrgProfileService_GetProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileGetProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    },
+    "/v1/orgprofile/{profile.org_id}": {
+      "put": {
+        "summary": "Upsert org profile.",
+        "description": "Create or update an org profile.",
+        "operationId": "OrgProfileService_UpsertProfile",
+        "responses": {
+          "200": {
+            "description": "Request executed successfully.",
+            "schema": {
+              "$ref": "#/definitions/orgProfileUpsertProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Returned when request is incorrect or malformed.",
+            "schema": {}
+          },
+          "401": {
+            "description": "Returned when not authorized to perform this action.",
+            "schema": {}
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "profile.org_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/service1UpsertProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Org Profile"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "service1AccountInfo": {
+      "type": "object",
+      "properties": {
+        "bank": {
+          "type": "string"
+        },
+        "bank_account_number": {
+          "type": "string"
+        },
+        "bank_account_holder": {
+          "type": "string"
+        },
+        "agree_terms_conditions": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "agree_online_supplier_form": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "currency": {
+          "$ref": "#/definitions/service1Currency"
+        }
+      }
+    },
+    "service1Address": {
+      "type": "object",
+      "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        }
+      }
+    },
+    "service1Boolean": {
+      "type": "string",
+      "enum": [
+        "UnknownBoolean",
+        "True",
+        "False"
+      ],
+      "default": "UnknownBoolean",
+      "title": "To avoid overrides of boolean on upsert"
+    },
+    "service1Branch": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/service1Address"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "fax_number": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "service1BusinessInfo": {
+      "type": "object",
+      "properties": {
+        "company_name": {
+          "type": "string"
+        },
+        "store_name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "fax_number": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "company_email": {
+          "type": "string"
+        },
+        "contact_person": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/service1Address"
+        },
+        "id_photo_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "picture_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nbi_clearance_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "court_clearance_url": {
+          "type": "string"
+        },
+        "incorporation_paper_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mayor_permit_url": {
+          "type": "string"
+        },
+        "id_photo_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "picture_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "nbi_clearance_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "court_clearance_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "incorporation_papers_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "mayor_permit_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/service1Branch"
+          }
+        },
+        "id_photo_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "picture_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "nbi_clearance_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "court_clearance_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "incorporation_papers_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "mayor_permit_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "service1Currency": {
+      "type": "string",
+      "enum": [
+        "UnknownCurrency",
+        "PHP",
+        "USD",
+        "EURO",
+        "SGD"
+      ],
+      "default": "UnknownCurrency"
+    },
+    "service1DRPInfo": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "questionnaire_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "questionnaire_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "questionnaire_date_check": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "service1FeeCommission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "fee_amount": {
+          "type": "string"
+        },
+        "commission_amount": {
+          "type": "string"
+        },
+        "fee_status": {
+          "$ref": "#/definitions/service1FeeStatus"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "service1FeeStatus": {
+      "type": "string",
+      "enum": [
+        "UnknownFeeStatus",
+        "Active",
+        "Disabled"
+      ],
+      "default": "UnknownFeeStatus"
+    },
+    "service1FinancialInfo": {
+      "type": "object",
+      "properties": {
+        "financial_statement_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bank_statement_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "financial_statement_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "bank_statement_submitted": {
+          "$ref": "#/definitions/service1Boolean"
+        },
+        "financial_statement_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bank_statement_date_checked": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "service1GetProfileResponse": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/service1OrgProfile"
+        }
+      }
+    },
+    "service1ListProfilesResponse": {
+      "type": "object",
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/service1OrgProfile"
+          }
+        }
+      }
+    },
+    "service1OrgProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "business_info": {
+          "$ref": "#/definitions/service1BusinessInfo"
+        },
+        "financial_info": {
+          "$ref": "#/definitions/service1FinancialInfo"
+        },
+        "account_info": {
+          "$ref": "#/definitions/service1AccountInfo"
+        },
+        "drp_info": {
+          "$ref": "#/definitions/service1DRPInfo"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "date_applied": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "$ref": "#/definitions/service1Status"
+        },
+        "risk_score": {
+          "$ref": "#/definitions/service1RiskScore"
+        },
+        "fee_commissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/service1FeeCommission"
+          }
+        },
+        "org_type": {
+          "$ref": "#/definitions/service1OrgType"
+        }
+      }
+    },
+    "service1OrgType": {
+      "type": "string",
+      "enum": [
+        "UnknownOrgType",
+        "PetNet",
+        "DSA"
+      ],
+      "default": "UnknownOrgType"
+    },
+    "service1RiskScore": {
+      "type": "string",
+      "enum": [
+        "UnknownRiskScore",
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "default": "UnknownRiskScore"
+    },
+    "service1Status": {
+      "type": "string",
+      "enum": [
+        "UnknownStatus",
+        "Accepted",
+        "Completed",
+        "Pending",
+        "Rejected"
+      ],
+      "default": "UnknownStatus"
+    },
+    "service1UpsertProfileRequest": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/service1OrgProfile"
+        }
+      }
+    },
+    "service1UpsertProfileResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "branch_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fee_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

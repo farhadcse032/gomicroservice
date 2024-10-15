@@ -1,0 +1,64 @@
+package service3
+
+import "github.com/gunk/opt/http"
+
+type SearchRequest struct {
+    // Keyword to search organization
+    Keyword string `pb:"1" json:"keyword"`
+    Take int `pb:"2" json:"take"`
+    Skip int `pb:"3" json:"skip"`
+}
+
+type SearchByEmailRequest struct {
+    // Email to search organization
+    Email string `pb:"1" json:"email"`
+}
+
+type Organization struct {
+    Id int `pb:"1" json:"id"`
+    Name string `pb:"2" json:"name"`
+}
+
+type SearchResponse struct {
+    // Total is the total number of items
+    Total int `pb:"1" json:"total"`
+    // Organizations is the list of organizations
+    Organizations []Organization `pb:"2" json:"organizations"`
+}
+
+type ApprovalRequest struct {
+    // Id is the id of the request
+    Id int `pb:"1" json:"id"`
+    // Status is the status of the request
+    Status string `pb:"2" json:"status"`
+    // Role is the role of the request
+    Role string `pb:"3" json:"role"`
+}
+type ApprovalResponse struct {
+    // Success is the status of the request
+    Success bool `pb:"1" json:"success"`
+    // Message is the message from the server
+    Message string `pb:"2" json:"message"`
+}
+
+type OrganizationService interface {
+    // Search returns a list of organizations
+    // +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/api/v4/organization",
+	// }
+    Search(request SearchRequest) SearchResponse
+    // Search returns a list of organizations
+    // +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/api/v4/organization-by-email",
+	// }
+    SearchByEmail(request SearchByEmailRequest) Organization
+    // Approval endpoint for join organization request 
+    // +gunk http.Match{
+	//         Method: "POST",
+	//         Path:   "/api/v4/organization/approval",
+    //         Body:   "*",
+	// }
+    Approval(request ApprovalRequest) ApprovalResponse
+}
