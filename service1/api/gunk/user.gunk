@@ -1,0 +1,281 @@
+package service1 
+
+import (
+	"time"
+
+	"github.com/gunk/opt/http"
+	"github.com/gunk/opt/openapiv2"
+)
+
+type Status int
+
+const (
+	UnknownStatus Status = iota
+	Accepted
+	Completed
+	Pending
+	Rejected
+)
+
+type RiskScore int
+
+const (
+	UnknownRiskScore RiskScore = iota
+	Low
+	Medium
+	High
+)
+
+type Currency int
+
+const (
+	UnknownCurrency Currency = iota
+	PHP
+	USD
+	EURO
+	SGD
+)
+
+type FeeStatus int
+
+const (
+	UnknownFeeStatus FeeStatus = iota
+	Active
+	Disabled
+)
+
+// To avoid overrides of boolean on upsert
+type Boolean int
+
+const (
+	UnknownBoolean Boolean = iota
+	True
+	False
+)
+
+type OrgType int
+
+const (
+	UnknownOrgType OrgType = iota
+	PetNet
+	DSA
+)
+
+type UpsertProfileRequest struct {
+	Profile OrgProfile `pb:"1" json:"profile"`
+}
+
+type UpsertProfileResponse struct {
+	ID        string   `pb:"1" json:"id"`
+	BranchIDs []string `pb:"2" json:"branch_ids"`
+	FeeIDs    []string `pb:"3" json:"fee_ids"`
+}
+
+type GetProfileRequest struct {
+	OrgID string `pb:"1" json:"id"`
+}
+
+type GetProfileResponse struct {
+	Profile OrgProfile `pb:"1" json:"profile"`
+}
+
+type ListProfilesRequest struct{}
+
+type ListProfilesResponse struct {
+	Profiles []OrgProfile `pb:"1" json:"profiles"`
+}
+
+type OrgProfile struct {
+	ID             string          `pb:"1" json:"id"`
+	UserID         string          `pb:"2" json:"user_id"`
+	OrgID          string          `pb:"3" json:"org_id"`
+	BusinessInfo   BusinessInfo    `pb:"4" json:"business_info"`
+	FinancialInfo  FinancialInfo   `pb:"5" json:"financial_info"`
+	AccountInfo    AccountInfo     `pb:"6" json:"account_info"`
+	DRPInfo        DRPInfo         `pb:"7" json:"drp_info"`
+	Created        time.Time       `pb:"8" json:"created"`
+	Updated        time.Time       `pb:"9" json:"updated"`
+	Deleted        time.Time       `pb:"10" json:"deleted"`
+	DateApplied    time.Time       `pb:"11" json:"date_applied"`
+	Status         Status          `pb:"12" json:"status"`
+	RiskScore      RiskScore       `pb:"13" json:"risk_score"`
+	FeeCommissions []FeeCommission `pb:"14" json:"fee_commissions"`
+	OrgType        OrgType         `pb:"15" json:"org_type"`
+}
+
+type BusinessInfo struct {
+	CompanyName                  string    `pb:"1" json:"company_name"`
+	StoreName                    string    `pb:"2" json:"store_name"`
+	PhoneNumber                  string    `pb:"3" json:"phone_number"`
+	FaxNumber                    string    `pb:"4" json:"fax_number"`
+	Website                      string    `pb:"5" json:"website"`
+	CompanyEmail                 string    `pb:"6" json:"company_email"`
+	ContactPerson                string    `pb:"7" json:"contact_person"`
+	Position                     string    `pb:"8" json:"position"`
+	Address                      Address   `pb:"9" json:"address"`
+	IDPhotoURLs                  []string  `pb:"10" json:"id_photo_urls"`
+	PictureURLs                  []string  `pb:"11" json:"picture_urls"`
+	NBIClearanceURLs             []string  `pb:"12" json:"nbi_clearance_urls"`
+	CourtClearanceURL            string    `pb:"13" json:"court_clearance_url"`
+	IncorporationPapersURLs      []string  `pb:"14" json:"incorporation_paper_urls"`
+	MayorsPermitURL              string    `pb:"15" json:"mayor_permit_url"`
+	IDPhotoSubmitted             Boolean   `pb:"16" json:"id_photo_submitted"`
+	PictureSubmitted             Boolean   `pb:"17" json:"picture_submitted"`
+	NBIClearanceSubmitted        Boolean   `pb:"18" json:"nbi_clearance_submitted"`
+	CourtClearanceSubmitted      Boolean   `pb:"19" json:"court_clearance_submitted"`
+	IncorporationPapersSubmitted Boolean   `pb:"20" json:"incorporation_papers_submitted"`
+	MayorsPermitSubmitted        Boolean   `pb:"21" json:"mayor_permit_submitted"`
+	Branches                     []Branch  `pb:"22" json:"branches"`
+	IDPhotoDateCheck             time.Time `pb:"23" json:"id_photo_date_checked"`
+	PictureDateCheck             time.Time `pb:"24" json:"picture_date_checked"`
+	NBIClearanceDateCheck        time.Time `pb:"25" json:"nbi_clearance_date_checked"`
+	CourtClearanceDateCheck      time.Time `pb:"26" json:"court_clearance_date_checked"`
+	IncorporationPapersDateCheck time.Time `pb:"27" json:"incorporation_papers_date_checked"`
+	MayorsPermitDateCheck        time.Time `pb:"28" json:"mayor_permit_date_checked"`
+}
+
+type FinancialInfo struct {
+	FinancialStatementURLs      []string  `pb:"1" json:"financial_statement_urls"`
+	BankStatementURLs           []string  `pb:"2" json:"bank_statement_urls"`
+	FinancialStatementSubmitted Boolean   `pb:"3" json:"financial_statement_submitted"`
+	BankStatementSubmitted      Boolean   `pb:"4" json:"bank_statement_submitted"`
+	FinancialStatementDateCheck time.Time `pb:"5" json:"financial_statement_date_checked"`
+	BankStatementDateCheck      time.Time `pb:"6" json:"bank_statement_date_checked"`
+}
+
+type AccountInfo struct {
+	Bank                    string   `pb:"1" json:"bank"`
+	BankAccountNumber       string   `pb:"2" json:"bank_account_number"`
+	BankAccountHolder       string   `pb:"3" json:"bank_account_holder"`
+	AgreeTermsConditions    Boolean  `pb:"4" json:"agree_terms_conditions"`
+	AgreeOnlineSupplierForm Boolean  `pb:"5" json:"agree_online_supplier_form"`
+	Currency                Currency `pb:"6" json:"currency"`
+}
+
+type DRPInfo struct {
+	Service                string    `pb:"1" json:"service"`
+	QuestionnaireURLs      []string  `pb:"2" json:"questionnaire_urls"`
+	QuestionnaireSubmitted Boolean   `pb:"3" json:"questionnaire_submitted"`
+	QuestionnaireDateCheck time.Time `pb:"4" json:"questionnaire_date_check"`
+}
+
+type Address struct {
+	Address1   string `pb:"1" json:"address1"`
+	City       string `pb:"2" json:"city"`
+	State      string `pb:"3" json:"state"`
+	PostalCode string `pb:"4" json:"postal_code"`
+}
+
+type Branch struct {
+	ID            string    `pb:"1" json:"id"`
+	Title         string    `pb:"2" json:"title"`
+	Address       Address   `pb:"3" json:"address"`
+	PhoneNumber   string    `pb:"4" json:"phone_number"`
+	FaxNumber     string    `pb:"5" json:"fax_number"`
+	ContactPerson string    `pb:"6" json:"contact_person"`
+	Created       time.Time `pb:"7" json:"created"`
+	Updated       time.Time `pb:"8" json:"updated"`
+	Deleted       time.Time `pb:"9" json:"deleted"`
+}
+
+type FeeCommission struct {
+	ID               string    `pb:"1" json:"id"`
+	FeeAmount        string    `pb:"2" json:"fee_amount"`
+	CommissionAmount string    `pb:"3" json:"commission_amount"`
+	Status           FeeStatus `pb:"4" json:"fee_status"`
+	StartDate        time.Time `pb:"5" json:"start_date"`
+	EndDate          time.Time `pb:"6" json:"end_date"`
+	Created          time.Time `pb:"7" json:"created"`
+	Updated          time.Time `pb:"8" json:"updated"`
+	Deleted          time.Time `pb:"9" json:"deleted"`
+}
+
+type OrgProfileService interface {
+	// Upsert org profile.
+	//
+	// +gunk http.Match{
+	//         Method: "PUT",
+	//         Path:   "/v1/orgprofile/{Profile.OrgID}",
+	//         Body:   "*",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Profile"},
+	//         Description: "Create or update an org profile.",
+	//         Summary:     "Upsert org profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgProfileUpsertProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	UpsertProfile(UpsertProfileRequest) UpsertProfileResponse
+
+	// Get org profile by org ID.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/orgprofile/{OrgID}",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Profile"},
+	//         Description: "Get created org profile from org ID.",
+	//         Summary:     "Get org profile.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgProfileGetProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	GetProfile(GetProfileRequest) GetProfileResponse
+
+	// List org profiles.
+	//
+	// +gunk http.Match{
+	//         Method: "GET",
+	//         Path:   "/v1/orgprofile",
+	// }
+	// +gunk openapiv2.Operation{
+	//         Tags:        []string{"Org Profile"},
+	//         Description: "List all created org profiles.",
+	//         Summary:     "List org profiles.",
+	//         Responses: map[string]openapiv2.Response{
+	//                 "200": openapiv2.Response{
+	//                         Description: "Request executed successfully.",
+	//                         Schema: openapiv2.Schema{
+	//                                 JSONSchema: openapiv2.JSONSchema{
+	//                                         Ref: "#/definitions/orgProfileGetProfileResponse",
+	//                                 },
+	//                         },
+	//                 },
+	//                 "400": openapiv2.Response{
+	//                         Description: "Returned when request is incorrect or malformed.",
+	//                 },
+	//                 "401": openapiv2.Response{
+	//                         Description: "Returned when not authorized to perform this action.",
+	//                 },
+	//         },
+	// }
+	ListProfiles(ListProfilesRequest) ListProfilesResponse
+}

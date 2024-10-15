@@ -5,30 +5,21 @@ services:
     build: ./service1
     container_name: service1_container
     ports:
-      - "8081:8080"  # Map host port to service port
-    depends_on:
-      - localhost
+      - "8081:8081"  # Map host port to service port
+    network_mode: "host"
     environment:
-      - DB_HOST=localhost
+      - DB_HOST=localhost  # Use the service name db1, not localhost
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=password
       - DB_NAME=platform
-      
-  # Frontend (Next.js) for Service 1
-  # frontend1:
-  #   build: ./service1/frontend
-  #   container_name: frontend1_container
-  #   ports:
-  #     - "3001:3000"  # Next.js app port
 
   service2:
     build: ./service2
     container_name: service2_container
     ports:
-      - "8082:8080"
-    depends_on:
-      - localhost
+      - "8082:8082"
+    network_mode: "host"
     environment:
       - DB_HOST=localhost
       - DB_PORT=5432
@@ -42,9 +33,9 @@ services:
     ports:
       - "8083:8080"
     depends_on:
-      - localhost
+      - db3  # Depend on db3 for service3 database connection
     environment:
-      - DB_HOST=localhost
+      - DB_HOST=db3
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=password
@@ -54,34 +45,34 @@ services:
     build: ./frontend_service
     container_name: frontend_container
     ports:
-        - "3001:3000"    
+      - "3001:3000"
 
-  db1:
-    image: postgres:13
-    container_name: db1_container
-    environment:
-      POSTGRES_DB: platform
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5436:5432"
+  # db1:
+  #   image: postgres:13
+  #   container_name: db1_container
+  #   environment:
+  #     POSTGRES_DB: platform
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #   ports:
+  #     - "5436:5432"
 
-  db2:
-    image: postgres:13
-    container_name: db2_container
-    environment:
-      POSTGRES_DB: cms
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5437:5432"
+  # db2:
+  #   image: postgres:13
+  #   container_name: db2_container
+  #   environment:
+  #     POSTGRES_DB: cms
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #   ports:
+  #     - "5437:5432"
 
-  db3:
-    image: postgres:13
-    container_name: db3_container
-    environment:
-      POSTGRES_DB: sso
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5438:5432"
+  # db3:
+  #   image: postgres:13
+  #   container_name: db3_container
+  #   environment:
+  #     POSTGRES_DB: sso
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #   ports:
+  #     - "5438:5432"

@@ -1,0 +1,30 @@
+[generate go]
+plugin_version=v1.26.0
+json_tag_postproc=true
+
+[generate grpc-go]
+plugin_version=v1.1.0
+
+[generate openapiv2]
+json_names_for_fields=true
+plugin_version=v2.3.0
+
+[generate]
+command=protoc-gen-grpc-gateway
+logtostderr=true
+
+[protoc]
+version=v3.9.1
+
+#[generate go]
+#plugins=grpc
+#json_tag_postproc=true
+#
+#[generate]
+#command=protoc-gen-grpc-gateway
+#logtostderr=true
+#
+#[protoc]
+#version=v3.12.0
+
+# gunk generate ./...
